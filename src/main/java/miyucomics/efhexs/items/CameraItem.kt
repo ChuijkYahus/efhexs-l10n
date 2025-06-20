@@ -9,19 +9,19 @@ import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.world.World
 
-class MicrophoneItem : Item(Settings().maxCount(1)) {
+class CameraItem : Item(Settings().maxCount(1)) {
 	override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
 		user.setCurrentHand(hand)
 		if (world.isClient)
-			ClientStorage.recordingSound = true
+			ClientStorage.recordingParticle = true
 		return TypedActionResult.success(user.getStackInHand(hand))
 	}
 
 	override fun onStoppedUsing(stack: ItemStack, world: World, livingEntity: LivingEntity?, i: Int) {
 		if (!world.isClient)
 			return
-		ClientStorage.recordingSound = false
-		ClientStorage.pushSoundsToServer()
+		ClientStorage.recordingParticle = false
+		ClientStorage.pushParticlesToServer()
 	}
 
 	override fun getMaxUseTime(stack: ItemStack) = 72000

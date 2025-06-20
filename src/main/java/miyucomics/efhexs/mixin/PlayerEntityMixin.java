@@ -11,15 +11,16 @@ import java.util.List;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin implements PlayerEntityMinterface {
+	private List<Identifier> particles = new ArrayList<>();
 	private List<Identifier> sounds = new ArrayList<>();
+
+	@Override
+	public List<Identifier> getParticles() {
+		return particles;
+	}
 
 	@Override
 	public List<Identifier> getSounds() {
 		return sounds;
-	}
-
-	@Override
-	public void setSounds(List<Identifier> sounds) {
-		this.sounds = sounds;
 	}
 }
