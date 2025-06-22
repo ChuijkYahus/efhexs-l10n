@@ -1,8 +1,8 @@
 package miyucomics.efhexs.misc
 
-import net.minecraft.client.MinecraftClient
 import net.minecraft.network.PacketByteBuf
+import net.minecraft.particle.ParticleEffect
 
 interface ComplexParticleHandler {
-	fun produceParticleEffect(client: MinecraftClient, buf: PacketByteBuf, x: Double, y: Double, z: Double)
+	fun produceParticleEffect(buf: PacketByteBuf): ParticleEffect
 }

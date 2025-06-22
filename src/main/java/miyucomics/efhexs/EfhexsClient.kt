@@ -4,8 +4,6 @@ import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.particle.DefaultParticleType
 import net.minecraft.registry.Registries
-import net.minecraft.util.math.Vec3d
-import org.joml.Vector3f
 
 class EfhexsClient : ClientModInitializer {
 	override fun onInitializeClient() {
@@ -31,11 +29,17 @@ class EfhexsClient : ClientModInitializer {
 			val x = buf.readDouble()
 			val y = buf.readDouble()
 			val z = buf.readDouble()
+			val dx = buf.readDouble()
+			val dy = buf.readDouble()
+			val dz = buf.readDouble()
 			if (!EfhexsMain.COMPLEX_PARTICLE_REGISTRY.containsId(particleId))
 				return@registerGlobalReceiver
+			val effect = EfhexsMain.COMPLEX_PARTICLE_REGISTRY.get(particleId)!!.produceParticleEffect(buf)
 			client.execute {
-				if (client.world != null)
-					EfhexsMain.COMPLEX_PARTICLE_REGISTRY.get(particleId)!!.produceParticleEffect(client, buf, x, y, z)
+				if (client.world != null) {
+					val particle = client.particleManager.addParticle(effect, x, y, z, 0.0, 0.0, 0.0)
+					particle?.setVelocity(dx, dy, dz)
+				}
 			}
 		}
 	}

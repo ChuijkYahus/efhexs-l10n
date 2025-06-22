@@ -22,19 +22,26 @@ class OpPlayComplexParticle(val particleType: Identifier, argCount: Int, val pop
 	override fun execute(args: List<Iota>, env: CastingEnvironment): SpellAction.Result {
 		val pos = args.getVec3(0, argc)
 		env.assertVecInRange(pos)
+		val velocity = args.getVec3(1, argc)
 		val buf = PacketByteBufs.create()
 		buf.writeIdentifier(particleType)
 		buf.writeDouble(pos.x)
 		buf.writeDouble(pos.y)
 		buf.writeDouble(pos.z)
+		buf.writeDouble(velocity.x)
+		buf.writeDouble(velocity.y)
+		buf.writeDouble(velocity.z)
 		populateBuffer(buf, args)
 		return SpellAction.Result(Spell(buf), 0, listOf())
 	}
 
 	private data class Spell(val buf: PacketByteBuf) : RenderedSpell {
 		override fun cast(env: CastingEnvironment) {
-			for (player in env.world.getPlayers())
+			for (player in env.world.getPlayers()) {
+				val playerBuf = PacketByteBufs.create()
+				playerBuf.writeBytes(buf.copy())
 				ServerPlayNetworking.send(player, EfhexsMain.SPAWN_COMPLEX_PARTICLE_CHANNEL, buf)
+			}
 		}
 	}
 }
