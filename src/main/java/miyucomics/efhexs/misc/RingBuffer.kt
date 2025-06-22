@@ -8,10 +8,10 @@ class RingBuffer<T>(private val capacity: Int)  : Iterable<T> {
 	private var full = false
 	private var size = 0
 
-	val isEmpty get() = size == 0
-	val isFull get() = size == capacity
-
 	fun push(item: T) {
+		if (any { it === item || it == item })
+			return
+
 		buffer[tail] = item
 		tail = (tail + 1) % capacity
 
@@ -23,17 +23,6 @@ class RingBuffer<T>(private val capacity: Int)  : Iterable<T> {
 		}
 	}
 
-	fun pop(): T? {
-		if (isEmpty) return null
-		val item = buffer[head] as T
-		buffer[head] = null
-		head = (head + 1) % capacity
-		size--
-		full = false
-		return item
-	}
-
-	fun peek(): T? = if (isEmpty) null else buffer[head] as T
 	fun getSize(): Int = size
 
 	override fun iterator(): Iterator<T> = object : Iterator<T> {

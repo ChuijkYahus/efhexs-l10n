@@ -11,21 +11,12 @@ import at.petrak.hexcasting.api.casting.mishaps.MishapInvalidIota
 import at.petrak.hexcasting.common.lib.hex.HexActions
 import at.petrak.hexcasting.common.particles.ConjureParticleOptions
 import miyucomics.efhexs.EfhexsMain.Companion.id
-import miyucomics.efhexs.actions.OpGetParticles
-import miyucomics.efhexs.actions.OpGetSounds
-import miyucomics.efhexs.actions.OpPlaySimpleParticle
-import miyucomics.efhexs.actions.OpPlaySound
-import miyucomics.efhexs.actions.OpPlayComplexParticle
+import miyucomics.efhexs.actions.*
 import miyucomics.efhexs.misc.ComplexParticleHandler
 import miyucomics.hexposition.iotas.getIdentifier
 import miyucomics.hexposition.iotas.getItemStack
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.particle.BlockStateParticleEffect
-import net.minecraft.particle.DustColorTransitionParticleEffect
-import net.minecraft.particle.DustParticleEffect
-import net.minecraft.particle.ItemStackParticleEffect
-import net.minecraft.particle.ParticleEffect
-import net.minecraft.particle.ParticleTypes
+import net.minecraft.particle.*
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.util.Identifier
@@ -36,7 +27,7 @@ object EfhexsPatterns {
 		register("get_sounds", "aawa", HexDir.WEST, OpGetSounds())
 		register("play_sound", "dwdd", HexDir.WEST, OpPlaySound())
 
-		register("get_particles", "eqqqqqaq", HexDir.WEST, OpGetParticles())
+		register("get_particles", "eqqqqqaq", HexDir.NORTH_EAST, OpGetParticles())
 		register("play_particle", "eqqqqqaaw", HexDir.NORTH_EAST, OpPlaySimpleParticle())
 
 		register("play_dust_particle", "eqqqqqaaq", HexDir.NORTH_EAST, OpPlayComplexParticle(Identifier("dust"), 3,

@@ -1,7 +1,7 @@
 package miyucomics.efhexs.misc
 
-import java.util.List
 import net.minecraft.util.Identifier
+import java.util.List
 
 interface PlayerEntityMinterface {
 	fun getParticles(): List<Identifier>

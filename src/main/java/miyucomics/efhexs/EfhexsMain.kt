@@ -1,8 +1,7 @@
 package miyucomics.efhexs
 
 import miyucomics.efhexs.inits.EfhexsPatterns
-import miyucomics.efhexs.items.CameraItem
-import miyucomics.efhexs.items.MicrophoneItem
+import miyucomics.efhexs.misc.MicrophoneItem
 import miyucomics.efhexs.misc.ComplexParticleHandler
 import miyucomics.efhexs.misc.PlayerEntityMinterface
 import net.fabricmc.api.ModInitializer
@@ -18,7 +17,6 @@ import net.minecraft.util.Identifier
 class EfhexsMain : ModInitializer {
 	override fun onInitialize() {
 		EfhexsPatterns.init()
-		Registry.register(Registries.ITEM, id("camera"), CameraItem())
 		Registry.register(Registries.ITEM, id("microphone"), MicrophoneItem())
 
 		ServerPlayNetworking.registerGlobalReceiver(PARTICLE_CHANNEL) { _, player, _, buf, _ ->

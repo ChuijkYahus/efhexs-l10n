@@ -3,11 +3,11 @@ package miyucomics.efhexs.actions
 import at.petrak.hexcasting.api.casting.RenderedSpell
 import at.petrak.hexcasting.api.casting.castables.SpellAction
 import at.petrak.hexcasting.api.casting.eval.CastingEnvironment
-import at.petrak.hexcasting.api.casting.getDouble
 import at.petrak.hexcasting.api.casting.getPositiveDoubleUnderInclusive
 import at.petrak.hexcasting.api.casting.getVec3
 import at.petrak.hexcasting.api.casting.iota.Iota
 import at.petrak.hexcasting.api.casting.mishaps.MishapInvalidIota
+import at.petrak.hexcasting.api.misc.MediaConstants
 import miyucomics.hexposition.iotas.getIdentifier
 import net.minecraft.registry.Registries
 import net.minecraft.sound.SoundCategory
@@ -24,7 +24,7 @@ class OpPlaySound : SpellAction {
 		env.assertVecInRange(pos)
 		val volume = args.getPositiveDoubleUnderInclusive(2, 2.0, argc)
 		val pitch = args.getPositiveDoubleUnderInclusive(3, 2.0, argc)
-		return SpellAction.Result(Spell(Registries.SOUND_EVENT.get(id)!!, pos, volume.toFloat(), pitch.toFloat()), 0, listOf())
+		return SpellAction.Result(Spell(Registries.SOUND_EVENT.get(id)!!, pos, volume.toFloat(), pitch.toFloat()), MediaConstants.DUST_UNIT / 16, listOf())
 	}
 
 	private data class Spell(val sound: SoundEvent, val pos: Vec3d, val volume: Float, val pitch: Float) : RenderedSpell {

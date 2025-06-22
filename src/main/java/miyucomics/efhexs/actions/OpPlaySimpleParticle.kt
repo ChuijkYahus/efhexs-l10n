@@ -6,6 +6,7 @@ import at.petrak.hexcasting.api.casting.eval.CastingEnvironment
 import at.petrak.hexcasting.api.casting.getVec3
 import at.petrak.hexcasting.api.casting.iota.Iota
 import at.petrak.hexcasting.api.casting.mishaps.MishapInvalidIota
+import at.petrak.hexcasting.api.misc.MediaConstants
 import miyucomics.efhexs.EfhexsMain
 import miyucomics.hexposition.iotas.getIdentifier
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
@@ -26,7 +27,7 @@ class OpPlaySimpleParticle : SpellAction {
 		val pos = args.getVec3(1, argc)
 		env.assertVecInRange(pos)
 		val velocity = args.getVec3(2, argc)
-		return SpellAction.Result(Spell(id, pos, velocity), 0, listOf())
+		return SpellAction.Result(Spell(id, pos, velocity), MediaConstants.DUST_UNIT / 32, listOf())
 	}
 
 	private data class Spell(val particle: Identifier, val pos: Vec3d, val velocity: Vec3d) : RenderedSpell {

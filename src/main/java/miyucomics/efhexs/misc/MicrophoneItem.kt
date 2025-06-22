@@ -1,6 +1,5 @@
-package miyucomics.efhexs.items
+package miyucomics.efhexs.misc
 
-import miyucomics.efhexs.misc.ClientStorage
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
@@ -14,17 +13,18 @@ class MicrophoneItem : Item(Settings().maxCount(1)) {
 	override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
 		user.setCurrentHand(hand)
 		if (world.isClient)
-			ClientStorage.recordingSound = true
+			ClientStorage.recording = true
 		return TypedActionResult.success(user.getStackInHand(hand))
 	}
 
 	override fun onStoppedUsing(stack: ItemStack, world: World, livingEntity: LivingEntity?, i: Int) {
 		if (!world.isClient)
 			return
-		ClientStorage.recordingSound = false
+		ClientStorage.recording = false
+		ClientStorage.pushParticlesToServer()
 		ClientStorage.pushSoundsToServer()
 	}
 
 	override fun getMaxUseTime(stack: ItemStack) = 72000
-	override fun getUseAction(itemStack: ItemStack) = UseAction.BLOCK
+	override fun getUseAction(itemStack: ItemStack) = UseAction.BOW
 }

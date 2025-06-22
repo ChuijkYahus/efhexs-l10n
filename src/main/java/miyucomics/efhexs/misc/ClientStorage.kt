@@ -9,20 +9,19 @@ import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
 
 object ClientStorage {
-	var recordingParticle = false
-	var recordingSound = false
+	var recording = false
 	private var particles: RingBuffer<Identifier> = RingBuffer(32)
 	private var sounds: RingBuffer<Identifier> = RingBuffer(32)
 
 	@JvmStatic
 	fun pushParticle(particle: ParticleEffect) {
-		if (recordingParticle)
+		if (recording)
 			particles.push(Registries.PARTICLE_TYPE.getId(particle.type)!!)
 	}
 
 	@JvmStatic
 	fun pushSound(sound: SoundInstance) {
-		if (recordingSound)
+		if (recording)
 			sounds.push(sound.id)
 	}
 

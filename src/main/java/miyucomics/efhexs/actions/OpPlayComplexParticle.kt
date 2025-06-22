@@ -5,6 +5,7 @@ import at.petrak.hexcasting.api.casting.castables.SpellAction
 import at.petrak.hexcasting.api.casting.eval.CastingEnvironment
 import at.petrak.hexcasting.api.casting.getVec3
 import at.petrak.hexcasting.api.casting.iota.Iota
+import at.petrak.hexcasting.api.misc.MediaConstants
 import miyucomics.efhexs.EfhexsMain
 import miyucomics.efhexs.misc.ComplexParticleHandler
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
@@ -32,7 +33,7 @@ class OpPlayComplexParticle(val particleType: Identifier, argCount: Int, val pop
 		buf.writeDouble(velocity.y)
 		buf.writeDouble(velocity.z)
 		populateBuffer(buf, args)
-		return SpellAction.Result(Spell(buf), 0, listOf())
+		return SpellAction.Result(Spell(buf), MediaConstants.DUST_UNIT / 32, listOf())
 	}
 
 	private data class Spell(val buf: PacketByteBuf) : RenderedSpell {
