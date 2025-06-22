@@ -1,3 +1,5 @@
 {
-	"hexcasting.mishap.invalid_value.sound_id": "an identifier of a sound type"
+	"hexcasting.mishap.invalid_value.particle_id": "an identifier of a particle type",
+	"hexcasting.mishap.invalid_value.sound_id":	"an identifier of a sound type",
+	"hexcasting.mishap.invalid_value.simple_particle_id": "an identifier of a simple particle type"
 }

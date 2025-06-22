@@ -17,11 +17,11 @@ import net.minecraft.util.math.Vec3d
 class OpPlaySound : SpellAction {
 	override val argc = 4
 	override fun execute(args: List<Iota>, env: CastingEnvironment): SpellAction.Result {
-		val pos = args.getVec3(0, argc)
-		env.assertVecInRange(pos)
-		val id = args.getIdentifier(1, argc)
+		val id = args.getIdentifier(0, argc)
 		if (!Registries.SOUND_EVENT.containsId(id))
-			throw MishapInvalidIota.of(args[1], 0, "sound_id")
+			throw MishapInvalidIota.of(args[0], 3, "sound_id")
+		val pos = args.getVec3(1, argc)
+		env.assertVecInRange(pos)
 		val volume = args.getPositiveDoubleUnderInclusive(2, 2.0, argc)
 		val pitch = args.getPositiveDoubleUnderInclusive(3, 2.0, argc)
 		return SpellAction.Result(Spell(Registries.SOUND_EVENT.get(id)!!, pos, volume.toFloat(), pitch.toFloat()), 0, listOf())
