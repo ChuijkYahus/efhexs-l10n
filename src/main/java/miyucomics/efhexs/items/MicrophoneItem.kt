@@ -7,6 +7,7 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
+import net.minecraft.util.UseAction
 import net.minecraft.world.World
 
 class MicrophoneItem : Item(Settings().maxCount(1)) {
@@ -25,4 +26,5 @@ class MicrophoneItem : Item(Settings().maxCount(1)) {
 	}
 
 	override fun getMaxUseTime(stack: ItemStack) = 72000
+	override fun getUseAction(itemStack: ItemStack) = UseAction.BLOCK
 }
