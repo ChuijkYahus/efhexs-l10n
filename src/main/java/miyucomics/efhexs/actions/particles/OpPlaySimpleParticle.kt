@@ -1,16 +1,19 @@
-package miyucomics.efhexs.actions
+package miyucomics.efhexs.actions.particles
 
 import at.petrak.hexcasting.api.casting.RenderedSpell
 import at.petrak.hexcasting.api.casting.castables.SpellAction
 import at.petrak.hexcasting.api.casting.eval.CastingEnvironment
+import at.petrak.hexcasting.api.casting.eval.vm.CastingImage
 import at.petrak.hexcasting.api.casting.getVec3
 import at.petrak.hexcasting.api.casting.iota.Iota
 import at.petrak.hexcasting.api.casting.mishaps.MishapInvalidIota
 import at.petrak.hexcasting.api.misc.MediaConstants
 import miyucomics.efhexs.EfhexsMain
-import miyucomics.hexposition.iotas.getIdentifier
+import miyucomics.efhexs.EfhexsMain.Companion.getTargetsFromImage
+import miyucomics.hexpose.iotas.getIdentifier
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.command.argument.EntityArgumentType.player
 import net.minecraft.particle.DefaultParticleType
 import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
@@ -31,7 +34,8 @@ class OpPlaySimpleParticle : SpellAction {
 	}
 
 	private data class Spell(val particle: Identifier, val pos: Vec3d, val velocity: Vec3d) : RenderedSpell {
-		override fun cast(env: CastingEnvironment) {
+		override fun cast(env: CastingEnvironment) {}
+		override fun cast(env: CastingEnvironment, image: CastingImage): CastingImage {
 			val packet = PacketByteBufs.create()
 			packet.writeIdentifier(particle)
 			packet.writeDouble(pos.x)
@@ -40,8 +44,10 @@ class OpPlaySimpleParticle : SpellAction {
 			packet.writeDouble(velocity.x)
 			packet.writeDouble(velocity.y)
 			packet.writeDouble(velocity.z)
-			for (player in env.world.getPlayers())
-				ServerPlayNetworking.send(player, EfhexsMain.SPAWN_SIMPLE_PARTICLE_CHANNEL, packet)
+			getTargetsFromImage(env.world, image, pos.x, pos.y, pos.z).forEach {
+				ServerPlayNetworking.send(it, EfhexsMain.SPAWN_SIMPLE_PARTICLE_CHANNEL, packet)
+			}
+			return image
 		}
 	}
 }

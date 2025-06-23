@@ -1,4 +1,4 @@
-package miyucomics.efhexs.actions
+package miyucomics.efhexs.actions.sounds
 
 import at.petrak.hexcasting.api.casting.asActionResult
 import at.petrak.hexcasting.api.casting.castables.ConstMediaAction
@@ -6,7 +6,7 @@ import at.petrak.hexcasting.api.casting.eval.CastingEnvironment
 import at.petrak.hexcasting.api.casting.iota.Iota
 import at.petrak.hexcasting.api.casting.mishaps.MishapBadCaster
 import miyucomics.efhexs.misc.PlayerEntityMinterface
-import miyucomics.hexposition.iotas.IdentifierIota
+import miyucomics.hexpose.iotas.IdentifierIota
 import net.minecraft.entity.player.PlayerEntity
 
 class OpGetSounds : ConstMediaAction {

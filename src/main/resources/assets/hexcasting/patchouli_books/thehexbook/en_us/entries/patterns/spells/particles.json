@@ -3,7 +3,7 @@
 	"icon": "minecraft:pink_petals",
 	"category": "hexcasting:patterns/spells",
 	"advancement": "hexcasting:root",
-	"sortnum": 30,
+	"sortnum": 50,
 	"pages": [
 		{
 			"type": "patchouli:text",
@@ -33,7 +33,7 @@
 			"type": "hexcasting:pattern",
 			"op_id": "efhexs:play_dust_particle",
 			"anchor": "efhexs:play_dust_particle",
-			"input": "..., vector",
+			"input": "..., vector, number",
 			"output": "",
 			"text": "efhexs.page.play_dust_particle.summary"
 		},
@@ -65,7 +65,7 @@
 			"type": "hexcasting:pattern",
 			"op_id": "efhexs:play_item_particle",
 			"anchor": "efhexs:play_item_particle",
-			"input": "..., identifier",
+			"input": "..., item",
 			"output": "",
 			"text": "efhexs.page.play_item_particle.summary"
 		},
@@ -73,7 +73,7 @@
 			"type": "hexcasting:pattern",
 			"op_id": "efhexs:play_hex_particle",
 			"anchor": "efhexs:play_hex_particle",
-			"input": "..., vector, number",
+			"input": "..., vector",
 			"output": "",
 			"text": "efhexs.page.play_hex_particle.summary"
 		}

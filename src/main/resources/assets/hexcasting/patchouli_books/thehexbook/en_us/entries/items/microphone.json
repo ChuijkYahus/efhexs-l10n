@@ -1,7 +1,7 @@
 {
 	"name": "efhexs.page.microphone.title",
 	"icon": "efhexs:microphone",
-	"category": "hexcasting:patterns/spells",
+	"category": "hexcasting:items",
 	"advancement": "hexcasting:root",
 	"sortnum": 30,
 	"pages": [

@@ -11,12 +11,18 @@ import at.petrak.hexcasting.api.casting.mishaps.MishapInvalidIota
 import at.petrak.hexcasting.common.lib.hex.HexActions
 import at.petrak.hexcasting.common.particles.ConjureParticleOptions
 import miyucomics.efhexs.EfhexsMain.Companion.id
-import miyucomics.efhexs.actions.*
+import miyucomics.efhexs.actions.OpSetTargets
+import miyucomics.efhexs.actions.particles.OpGetParticles
+import miyucomics.efhexs.actions.particles.OpPlayComplexParticle
+import miyucomics.efhexs.actions.particles.OpPlaySimpleParticle
+import miyucomics.efhexs.actions.sounds.OpGetSounds
+import miyucomics.efhexs.actions.sounds.OpPlaySound
 import miyucomics.efhexs.misc.ComplexParticleHandler
-import miyucomics.hexposition.iotas.getIdentifier
-import miyucomics.hexposition.iotas.getItemStack
+import miyucomics.hexpose.iotas.getIdentifier
+import miyucomics.hexpose.iotas.getItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.particle.*
+import net.minecraft.particle.ParticleTypes
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.util.Identifier
@@ -24,16 +30,21 @@ import net.minecraft.util.math.ColorHelper
 
 object EfhexsPatterns {
 	fun init() {
+		register("set_target", "aawawqeqqqqqwa", HexDir.EAST, OpSetTargets())
+
 		register("get_sounds", "aawa", HexDir.WEST, OpGetSounds())
 		register("play_sound", "dwdd", HexDir.WEST, OpPlaySound())
 
 		register("get_particles", "eqqqqqaq", HexDir.NORTH_EAST, OpGetParticles())
 		register("play_particle", "eqqqqqaaw", HexDir.NORTH_EAST, OpPlaySimpleParticle())
 
-		register("play_dust_particle", "eqqqqqaaq", HexDir.NORTH_EAST, OpPlayComplexParticle(Identifier("dust"), 3,
+		register("play_dust_particle", "eqqqqqaaq", HexDir.NORTH_EAST, OpPlayComplexParticle(
+			Identifier("dust"), 4,
 			{ buf, args ->
-				val color = args.getVec3(2, 3)
+				val color = args.getVec3(2, 4)
+				val scale = args.getPositiveDoubleUnderInclusive(3, 10.0, 4)
 				buf.writeVector3f(color.toVector3f())
+				buf.writeFloat(scale.toFloat())
 			},
 			object : ComplexParticleHandler {
 				override fun produceParticleEffect(buf: PacketByteBuf) =
@@ -41,7 +52,8 @@ object EfhexsPatterns {
 			}
 		))
 
-		register("play_dust_transition_particle", "eqqqqqaaqda", HexDir.NORTH_EAST, OpPlayComplexParticle(Identifier("dust_color_transition"), 5,
+		register("play_dust_transition_particle", "eqqqqqaaqda", HexDir.NORTH_EAST, OpPlayComplexParticle(
+			Identifier("dust_color_transition"), 5,
 			{ buf, args ->
 				val colorA = args.getVec3(2, 5)
 				val colorB = args.getVec3(3, 5)
@@ -57,7 +69,8 @@ object EfhexsPatterns {
 			}
 		))
 
-		register("play_block_particle", "eqqqqqaawqqqae", HexDir.NORTH_EAST, OpPlayComplexParticle(Identifier("block"), 3,
+		register("play_block_particle", "eqqqqqaawqqqae", HexDir.NORTH_EAST, OpPlayComplexParticle(
+			Identifier("block"), 3,
 			{ buf, args ->
 				val id = args.getIdentifier(2, 3)
 				if (!Registries.BLOCK.containsId(id))
@@ -72,7 +85,8 @@ object EfhexsPatterns {
 			}
 		))
 
-		register("play_falling_dust_particle", "eqqqqqaaqw", HexDir.NORTH_EAST, OpPlayComplexParticle(Identifier("falling_dust"), 3,
+		register("play_falling_dust_particle", "eqqqqqaaqw", HexDir.NORTH_EAST, OpPlayComplexParticle(
+			Identifier("falling_dust"), 3,
 			{ buf, args ->
 				val id = args.getIdentifier(2, 3)
 				if (!Registries.BLOCK.containsId(id))
@@ -87,7 +101,8 @@ object EfhexsPatterns {
 			}
 		))
 
-		register("play_item_particle", "eqqqqqaaeaq", HexDir.NORTH_EAST, OpPlayComplexParticle(Identifier("item"), 3,
+		register("play_item_particle", "eqqqqqaaeaq", HexDir.NORTH_EAST, OpPlayComplexParticle(
+			Identifier("item"), 3,
 			{ buf, args ->
 				val item = args.getItemStack(2, 3)
 				buf.writeItemStack(item)
@@ -98,17 +113,21 @@ object EfhexsPatterns {
 			}
 		))
 
-		register("play_hex_particle", "eqqqqqaewawqwaw", HexDir.NORTH_EAST, OpPlayComplexParticle(Identifier("hex"), 4,
+		register("play_hex_particle", "eqqqqqaewawqwaw", HexDir.NORTH_EAST, OpPlayComplexParticle(
+			Identifier("hex"), 3,
 			{ buf, args ->
-				val color = args.getVec3(2, 4)
-				val alpha = (args.getPositiveDoubleUnderInclusive(3, 1.0, 4) * 255).toInt()
+				val color = args.getVec3(2, 3)
 				buf.writeVector3f(color.toVector3f())
-				buf.writeInt(alpha)
 			},
 			object : ComplexParticleHandler {
 				override fun produceParticleEffect(buf: PacketByteBuf): ParticleEffect {
 					val raw = buf.readVector3f()
-					val color = ColorHelper.Argb.getArgb(buf.readInt(), (raw.x * 255).toInt(), (raw.y * 255).toInt(), (raw.z * 255).toInt())
+					val color = ColorHelper.Argb.getArgb(
+						1,
+						(raw.x * 255).toInt(),
+						(raw.y * 255).toInt(),
+						(raw.z * 255).toInt()
+					)
 					return ConjureParticleOptions(color)
 				}
 			}

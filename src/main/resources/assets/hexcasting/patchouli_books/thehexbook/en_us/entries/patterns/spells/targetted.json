@@ -1,0 +1,21 @@
+{
+	"name": "efhexs.page.targetted.title",
+	"icon": "minecraft:wither_skeleton_skull",
+	"category": "hexcasting:patterns/spells",
+	"advancement": "hexcasting:root",
+	"sortnum": 50,
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "efhexs.page.targetted.0"
+		},
+		{
+			"type": "hexcasting:pattern",
+			"op_id": "efhexs:set_target",
+			"anchor": "efhexs:set_target",
+			"input": "null | list of entities",
+			"output": "",
+			"text": "efhexs.page.set_target.summary"
+		}
+	]
+}

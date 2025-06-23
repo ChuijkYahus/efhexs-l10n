@@ -22,7 +22,7 @@ include = [
 ]
 
 [template.args]
-mod_name = "Scryglass"
+mod_name = "Special Efhexs"
 author = "miyucomics"
 show_landing_text = false
 

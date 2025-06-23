@@ -1,9 +1,9 @@
 {
 	"name": "efhexs.page.sounds.title",
-	"icon": "minecraft:pink_petals",
+	"icon": "minecraft:jukebox",
 	"category": "hexcasting:patterns/spells",
 	"advancement": "hexcasting:root",
-	"sortnum": 30,
+	"sortnum": 50,
 	"pages": [
 		{
 			"type": "patchouli:text",
