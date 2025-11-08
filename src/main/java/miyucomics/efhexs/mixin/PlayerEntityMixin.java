@@ -4,11 +4,9 @@ import miyucomics.efhexs.misc.PlayerEntityMinterface;
 import miyucomics.hexpose.utils.RingBuffer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin implements PlayerEntityMinterface {
@@ -16,12 +14,12 @@ public class PlayerEntityMixin implements PlayerEntityMinterface {
 	@Unique private RingBuffer<Identifier> sounds = new RingBuffer<>(32);
 
 	@Override
-	public RingBuffer<Identifier> getParticles() {
+	public @NotNull RingBuffer<Identifier> getParticles() {
 		return particles;
 	}
 
 	@Override
-	public RingBuffer<Identifier> getSounds() {
+	public @NotNull RingBuffer<Identifier> getSounds() {
 		return sounds;
 	}
 }

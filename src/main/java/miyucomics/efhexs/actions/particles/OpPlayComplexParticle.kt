@@ -40,7 +40,7 @@ class OpPlayComplexParticle(val particleType: Identifier, argCount: Int, val pop
 
 	private data class Spell(val buf: PacketByteBuf, val x: Double, val y: Double, val z: Double) : RenderedSpell {
 		override fun cast(env: CastingEnvironment) {}
-		override fun cast(env: CastingEnvironment, image: CastingImage): CastingImage? {
+		override fun cast(env: CastingEnvironment, image: CastingImage): CastingImage {
 			getTargetsFromImage(env.world, image, x, y, z).forEach {
 				val playerBuf = PacketByteBufs.create()
 				playerBuf.writeBytes(buf.copy())
