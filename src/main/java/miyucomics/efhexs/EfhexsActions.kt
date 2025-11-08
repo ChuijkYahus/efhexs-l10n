@@ -77,7 +77,7 @@ object EfhexsActions {
 			{ buf, args ->
 				val id = args.getIdentifier(2, 3)
 				if (!Registries.BLOCK.containsId(id))
-					throw MishapInvalidIota.Companion.of(args[2], 0, "block_id")
+					throw MishapInvalidIota.of(args[2], 0, "block_id")
 				buf.writeIdentifier(id)
 			},
 			object : ComplexParticleHandler {
@@ -93,7 +93,7 @@ object EfhexsActions {
 			{ buf, args ->
 				val id = args.getIdentifier(2, 3)
 				if (!Registries.BLOCK.containsId(id))
-					throw MishapInvalidIota.Companion.of(args[2], 0, "block_id")
+					throw MishapInvalidIota.of(args[2], 0, "block_id")
 				buf.writeIdentifier(id)
 			},
 			object : ComplexParticleHandler {
@@ -139,7 +139,7 @@ object EfhexsActions {
 
 	private fun register(name: String, signature: String, startDir: HexDir, action: Action) =
 		Registry.register(
-			HexActions.REGISTRY, EfhexsMain.Companion.id(name),
-			ActionRegistryEntry(HexPattern.Companion.fromAngles(signature, startDir), action)
+			HexActions.REGISTRY, EfhexsMain.id(name),
+			ActionRegistryEntry(HexPattern.fromAngles(signature, startDir), action)
 		)
 }
