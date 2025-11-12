@@ -76,6 +76,14 @@
 			"input": "..., vector",
 			"output": "",
 			"text": "efhexs.page.play_hex_particle.summary"
+		},
+		{
+			"type": "hexcasting:pattern",
+			"op_id": "efhexs:play_item_pickup",
+			"anchor": "efhexs:play_item_pickup",
+			"input": "item, vector, entity",
+			"output": "",
+			"text": "efhexs.page.play_item_pickup.summary"
 		}
 	]
 }
