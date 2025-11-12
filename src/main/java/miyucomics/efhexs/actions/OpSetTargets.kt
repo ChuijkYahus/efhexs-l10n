@@ -14,7 +14,7 @@ import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtString
 import java.util.*
 
-class OpSetTargets : SpellAction {
+object OpSetTargets : SpellAction {
 	override val argc = 1
 	override fun execute(args: List<Iota>, env: CastingEnvironment): SpellAction.Result {
 		if (args[0] is NullIota)

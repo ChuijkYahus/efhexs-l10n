@@ -18,7 +18,7 @@ import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Vec3d
 
-class OpPlaySimpleParticle : SpellAction {
+object OpPlaySimpleParticle : SpellAction {
 	override val argc = 3
 	override fun execute(args: List<Iota>, env: CastingEnvironment): SpellAction.Result {
 		val id = args.getIdentifier(0, argc)

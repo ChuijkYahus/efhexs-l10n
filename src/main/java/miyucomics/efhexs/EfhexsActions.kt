@@ -13,6 +13,7 @@ import at.petrak.hexcasting.common.particles.ConjureParticleOptions
 import miyucomics.efhexs.actions.OpSetTargets
 import miyucomics.efhexs.actions.particles.OpGetParticles
 import miyucomics.efhexs.actions.particles.OpPlayComplexParticle
+import miyucomics.efhexs.actions.particles.OpPlayItemPickup
 import miyucomics.efhexs.actions.particles.OpPlaySimpleParticle
 import miyucomics.efhexs.actions.sounds.OpGetSounds
 import miyucomics.efhexs.actions.sounds.OpPlaySound
@@ -20,12 +21,7 @@ import miyucomics.efhexs.misc.ComplexParticleHandler
 import miyucomics.hexpose.iotas.getIdentifier
 import miyucomics.hexpose.iotas.getItemStack
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.particle.BlockStateParticleEffect
-import net.minecraft.particle.DustColorTransitionParticleEffect
-import net.minecraft.particle.DustParticleEffect
-import net.minecraft.particle.ItemStackParticleEffect
-import net.minecraft.particle.ParticleEffect
-import net.minecraft.particle.ParticleTypes
+import net.minecraft.particle.*
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.util.Identifier
@@ -33,13 +29,13 @@ import net.minecraft.util.math.ColorHelper
 
 object EfhexsActions {
 	fun init() {
-		register("set_target", "aawawqeqqqqqwa", HexDir.EAST, OpSetTargets())
+		register("set_target", "aawawqeqqqqqwa", HexDir.EAST, OpSetTargets)
 
-		register("get_sounds", "aeede", HexDir.WEST, OpGetSounds())
-		register("play_sound", "qaqqd", HexDir.WEST, OpPlaySound())
+		register("get_sounds", "aeede", HexDir.WEST, OpGetSounds)
+		register("play_sound", "qaqqd", HexDir.WEST, OpPlaySound)
 
-		register("get_particles", "eqqqqqaq", HexDir.NORTH_EAST, OpGetParticles())
-		register("play_particle", "eqqqqqaaw", HexDir.NORTH_EAST, OpPlaySimpleParticle())
+		register("get_particles", "eqqqqqaq", HexDir.NORTH_EAST, OpGetParticles)
+		register("play_particle", "eqqqqqaaw", HexDir.NORTH_EAST, OpPlaySimpleParticle)
 
 		register("play_dust_particle", "eqqqqqaaq", HexDir.NORTH_EAST, OpPlayComplexParticle(
 			Identifier("dust"), 4,
@@ -135,6 +131,8 @@ object EfhexsActions {
 				}
 			}
 		))
+
+		register("play_item_pickup", "eqqqqqaqwqa", HexDir.NORTH_EAST, OpPlayItemPickup)
 	}
 
 	private fun register(name: String, signature: String, startDir: HexDir, action: Action) =
