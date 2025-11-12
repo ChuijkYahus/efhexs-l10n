@@ -2,11 +2,24 @@ package miyucomics.efhexs
 
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.minecraft.client.particle.ItemPickupParticle
+import net.minecraft.entity.ItemEntity
 import net.minecraft.particle.DefaultParticleType
 import net.minecraft.registry.Registries
+import net.minecraft.util.math.Vec3d
 
 class EfhexsClient : ClientModInitializer {
 	override fun onInitializeClient() {
+		ClientPlayNetworking.registerGlobalReceiver(EfhexsMain.SPAWN_ITEM_PICKUP_CHANNEL) { client, _, buf, _ ->
+			val stack = buf.readItemStack()
+			val position = Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble())
+			val receiver = client.world!!.getEntityById(buf.readInt())
+			client.execute {
+				val createdItemEntity = ItemEntity(client.world, position.x, position.y, position.z, stack)
+				client.particleManager.addParticle(ItemPickupParticle(client.entityRenderDispatcher, client.bufferBuilders, client.world, createdItemEntity, receiver))
+			}
+		}
+
 		ClientPlayNetworking.registerGlobalReceiver(EfhexsMain.SPAWN_SIMPLE_PARTICLE_CHANNEL) { client, _, buf, _ ->
 			val particleId = buf.readIdentifier()
 			val x = buf.readDouble()

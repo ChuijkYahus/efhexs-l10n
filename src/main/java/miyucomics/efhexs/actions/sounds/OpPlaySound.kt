@@ -17,7 +17,7 @@ import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
 import net.minecraft.util.math.Vec3d
 
-class OpPlaySound : SpellAction {
+object OpPlaySound : SpellAction {
 	override val argc = 4
 	override fun execute(args: List<Iota>, env: CastingEnvironment): SpellAction.Result {
 		val id = args.getIdentifier(0, argc)

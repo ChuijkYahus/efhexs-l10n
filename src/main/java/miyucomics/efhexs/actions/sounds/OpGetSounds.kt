@@ -9,12 +9,12 @@ import miyucomics.efhexs.misc.PlayerEntityMinterface
 import miyucomics.hexpose.iotas.IdentifierIota
 import net.minecraft.entity.player.PlayerEntity
 
-class OpGetSounds : ConstMediaAction {
+object OpGetSounds : ConstMediaAction {
 	override val argc = 0
 	override fun execute(args: List<Iota>, env: CastingEnvironment): List<Iota> {
 		if (env.castingEntity !is PlayerEntity)
 			throw MishapBadCaster()
 		val caster = env.castingEntity as PlayerEntityMinterface
-		return caster.getSounds().map { IdentifierIota(it) }.asActionResult
+		return caster.getSounds().buffer().map(::IdentifierIota).asActionResult
 	}
 }
