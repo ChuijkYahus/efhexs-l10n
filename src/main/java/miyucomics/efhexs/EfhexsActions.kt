@@ -14,6 +14,7 @@ import miyucomics.efhexs.actions.OpSetTargets
 import miyucomics.efhexs.actions.particles.OpGetParticles
 import miyucomics.efhexs.actions.particles.OpPlayComplexParticle
 import miyucomics.efhexs.actions.particles.OpPlayItemPickup
+import miyucomics.efhexs.actions.particles.OpPlayPotionEffect
 import miyucomics.efhexs.actions.particles.OpPlaySimpleParticle
 import miyucomics.efhexs.actions.sounds.OpGetSounds
 import miyucomics.efhexs.actions.sounds.OpPlaySound
@@ -132,6 +133,7 @@ object EfhexsActions {
 			}
 		))
 
+		register("play_potion_effect", "eqqqqqaqqqqq", HexDir.NORTH_EAST, OpPlayPotionEffect)
 		register("play_item_pickup", "eqqqqqaqwqa", HexDir.NORTH_EAST, OpPlayItemPickup)
 	}
 

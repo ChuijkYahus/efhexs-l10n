@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.particle.ItemPickupParticle
 import net.minecraft.entity.ItemEntity
 import net.minecraft.particle.DefaultParticleType
+import net.minecraft.particle.ParticleTypes
 import net.minecraft.registry.Registries
 import net.minecraft.util.math.Vec3d
 
@@ -17,6 +18,16 @@ class EfhexsClient : ClientModInitializer {
 			client.execute {
 				val createdItemEntity = ItemEntity(client.world, position.x, position.y, position.z, stack)
 				client.particleManager.addParticle(ItemPickupParticle(client.entityRenderDispatcher, client.bufferBuilders, client.world, createdItemEntity, receiver))
+			}
+		}
+
+		ClientPlayNetworking.registerGlobalReceiver(EfhexsMain.SPAWN_POTION_EFFECT_CHANNEL) { client, _, buf, _ ->
+			val position = Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble())
+			val velocity = Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble())
+			val raw = buf.readVector3f()
+			client.execute {
+				val particle = client.particleManager.addParticle(ParticleTypes.ENTITY_EFFECT, position.x, position.y, position.z, raw.x.toDouble(), raw.y.toDouble(), raw.z.toDouble())
+				particle!!.setVelocity(velocity.x, velocity.y, velocity.z)
 			}
 		}
 
