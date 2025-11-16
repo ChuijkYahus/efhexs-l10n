@@ -43,6 +43,7 @@ class EfhexsMain : ModInitializer {
 		val SPAWN_SIMPLE_PARTICLE_CHANNEL = id("spawn_simple_particle")
 		val SPAWN_COMPLEX_PARTICLE_CHANNEL = id("spawn_complex_particle")
 		val SPAWN_ITEM_PICKUP_CHANNEL = id("spawn_item_pickup")
+		val SPAWN_POTION_EFFECT_CHANNEL = id("spawn_potion_effect")
 
 		private val COMPLEX_PARTICLE_REGISTRY_KEY: RegistryKey<Registry<ComplexParticleHandler>> = RegistryKey.ofRegistry(id("complex_particle_registry"))
 		val COMPLEX_PARTICLE_REGISTRY: SimpleRegistry<ComplexParticleHandler> = FabricRegistryBuilder.createSimple(COMPLEX_PARTICLE_REGISTRY_KEY).attribute(RegistryAttribute.MODDED).buildAndRegister()
