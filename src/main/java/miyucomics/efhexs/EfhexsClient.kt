@@ -56,9 +56,9 @@ class EfhexsClient : ClientModInitializer {
 			val dx = buf.readDouble()
 			val dy = buf.readDouble()
 			val dz = buf.readDouble()
-			if (!EfhexsMain.COMPLEX_PARTICLE_REGISTRY.containsId(particleId))
+			if (!EfhexsMain.PARTICLE_HANDLER_REGISTRY.containsId(particleId))
 				return@registerGlobalReceiver
-			val effect = EfhexsMain.COMPLEX_PARTICLE_REGISTRY.get(particleId)!!.produceParticleEffect(buf)
+			val effect = EfhexsMain.PARTICLE_HANDLER_REGISTRY.get(particleId)!!.produceParticleEffect(buf)
 			client.execute {
 				if (client.world != null) {
 					val particle = client.particleManager.addParticle(effect, x, y, z, 0.0, 0.0, 0.0)
