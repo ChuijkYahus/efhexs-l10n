@@ -1,14 +1,16 @@
 package miyucomics.efhexs
 
+import at.petrak.hexcasting.api.casting.eval.CastingEnvironment
 import at.petrak.hexcasting.api.casting.eval.vm.CastingImage
 import miyucomics.efhexs.misc.ComplexParticleHandler
+import miyucomics.efhexs.misc.EfhexsPusherComponent
 import miyucomics.efhexs.misc.PlayerEntityMinterface
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
-import net.minecraft.registry.Registry
 import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.SimpleRegistry
 import net.minecraft.server.network.ServerPlayerEntity
@@ -19,6 +21,7 @@ import java.util.*
 class EfhexsMain : ModInitializer {
 	override fun onInitialize() {
 		EfhexsActions.init()
+		CastingEnvironment.addCreateEventListener { env: CastingEnvironment, _: NbtCompound -> env.addExtension(EfhexsPusherComponent()) }
 
 		ServerPlayNetworking.registerGlobalReceiver(PARTICLE_CHANNEL) { _, player, _, buf, _ ->
 			val new = buf.readIdentifier()
@@ -45,8 +48,7 @@ class EfhexsMain : ModInitializer {
 		val SPAWN_ITEM_PICKUP_CHANNEL = id("spawn_item_pickup")
 		val SPAWN_POTION_EFFECT_CHANNEL = id("spawn_potion_effect")
 
-		private val COMPLEX_PARTICLE_REGISTRY_KEY: RegistryKey<Registry<ComplexParticleHandler>> = RegistryKey.ofRegistry(id("complex_particle_registry"))
-		val COMPLEX_PARTICLE_REGISTRY: SimpleRegistry<ComplexParticleHandler> = FabricRegistryBuilder.createSimple(COMPLEX_PARTICLE_REGISTRY_KEY).attribute(RegistryAttribute.MODDED).buildAndRegister()
+		val PARTICLE_HANDLER_REGISTRY: SimpleRegistry<ComplexParticleHandler> = FabricRegistryBuilder.createSimple<ComplexParticleHandler>(RegistryKey.ofRegistry(id("complex_particle_registry"))).attribute(RegistryAttribute.MODDED).buildAndRegister()
 
 		fun getTargetsFromImage(world: ServerWorld, image: CastingImage, x: Double, y: Double, z: Double): List<ServerPlayerEntity> {
 			if (!image.userData.contains("efhexs_targets"))

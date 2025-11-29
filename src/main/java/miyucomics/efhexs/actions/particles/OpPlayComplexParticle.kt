@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier
 
 class OpPlayComplexParticle(val particleType: Identifier, argCount: Int, val populateBuffer: (PacketByteBuf, List<Iota>) -> Unit, receiver: ComplexParticleHandler) : SpellAction {
 	init {
-		Registry.register(EfhexsMain.COMPLEX_PARTICLE_REGISTRY, particleType, receiver)
+		Registry.register(EfhexsMain.PARTICLE_HANDLER_REGISTRY, particleType, receiver)
 	}
 
 	override val argc = argCount
