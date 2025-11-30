@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin implements PlayerEntityMinterface {
-	@Unique private RingBuffer<Identifier> particles = new RingBuffer<>(32);
-	@Unique private RingBuffer<Identifier> sounds = new RingBuffer<>(32);
+	@Unique private final RingBuffer<Identifier> particles = new RingBuffer<>(32);
+	@Unique private final RingBuffer<Identifier> sounds = new RingBuffer<>(32);
 
 	@Override
 	public @NotNull RingBuffer<Identifier> getParticles() {
