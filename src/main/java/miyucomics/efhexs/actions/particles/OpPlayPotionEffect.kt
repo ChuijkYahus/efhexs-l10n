@@ -3,14 +3,13 @@ package miyucomics.efhexs.actions.particles
 import at.petrak.hexcasting.api.casting.RenderedSpell
 import at.petrak.hexcasting.api.casting.castables.SpellAction
 import at.petrak.hexcasting.api.casting.eval.CastingEnvironment
-import at.petrak.hexcasting.api.casting.eval.vm.CastingImage
 import at.petrak.hexcasting.api.casting.getVec3
 import at.petrak.hexcasting.api.casting.iota.Iota
 import at.petrak.hexcasting.api.misc.MediaConstants
-import miyucomics.efhexs.EfhexsMain
-import miyucomics.efhexs.EfhexsMain.Companion.getTargetsFromImage
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import miyucomics.efhexs.misc.ServerEffectsBacklog
+import miyucomics.efhexs.networking.Serializer
+import miyucomics.efhexs.networking.Serializers
+import miyucomics.efhexs.networking.serializers.PotionParticleInfo
 import net.minecraft.util.math.Vec3d
 
 object OpPlayPotionEffect : SpellAction {
@@ -24,20 +23,10 @@ object OpPlayPotionEffect : SpellAction {
 	}
 
 	private data class Spell(val position: Vec3d, val velocity: Vec3d, val color: Vec3d) : RenderedSpell {
-		override fun cast(env: CastingEnvironment) {}
-		override fun cast(env: CastingEnvironment, image: CastingImage): CastingImage {
-			getTargetsFromImage(env.world, image, position.x, position.y, position.z).forEach {
-				ServerPlayNetworking.send(it, EfhexsMain.SPAWN_POTION_EFFECT_CHANNEL, PacketByteBufs.create().apply {
-					writeDouble(position.x)
-					writeDouble(position.y)
-					writeDouble(position.z)
-					writeDouble(velocity.x)
-					writeDouble(velocity.y)
-					writeDouble(velocity.z)
-					writeVector3f(color.toVector3f())
-				})
-			}
-			return image
+		override fun cast(env: CastingEnvironment) {
+			ServerEffectsBacklog.count += 1
+			ServerEffectsBacklog.buffer.writeVarInt(Serializers.CREATE_POTION_PARTICLE.ordinal)
+			(Serializers.CREATE_POTION_PARTICLE.serializer as Serializer<PotionParticleInfo>).write(ServerEffectsBacklog.buffer, PotionParticleInfo(position, velocity, color))
 		}
 	}
 }
