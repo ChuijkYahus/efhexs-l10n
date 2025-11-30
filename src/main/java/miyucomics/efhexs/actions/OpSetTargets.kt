@@ -9,8 +9,9 @@ import at.petrak.hexcasting.api.casting.iota.EntityIota
 import at.petrak.hexcasting.api.casting.iota.Iota
 import at.petrak.hexcasting.api.casting.iota.NullIota
 import at.petrak.hexcasting.api.casting.mishaps.MishapInvalidIota
-import at.petrak.hexcasting.api.utils.getOrCreateList
-import net.minecraft.nbt.NbtElement
+import at.petrak.hexcasting.api.utils.putList
+import miyucomics.efhexs.misc.ServerEffectsBacklog
+import net.minecraft.nbt.NbtList
 import net.minecraft.nbt.NbtString
 import java.util.*
 
@@ -33,19 +34,20 @@ object OpSetTargets : SpellAction {
 	private data class Clear(val random: Int) : RenderedSpell {
 		override fun cast(env: CastingEnvironment) {}
 		override fun cast(env: CastingEnvironment, image: CastingImage): CastingImage {
-			val newImage = image.copy()
-			newImage.userData.remove("efhexs_targets")
-			return newImage
+			val newData = image.userData.copy()
+			newData.remove("efhexs_targets")
+			ServerEffectsBacklog.flush(env.world, image)
+			return image.copy(userData = newData)
 		}
 	}
 
 	private data class Set(val targets: List<UUID>) : RenderedSpell {
 		override fun cast(env: CastingEnvironment) {}
 		override fun cast(env: CastingEnvironment, image: CastingImage): CastingImage {
-			val newImage = image.copy()
-			val list = newImage.userData.getOrCreateList("efhexs_targets", NbtElement.STRING_TYPE.toInt())
-			targets.forEach { list.add(NbtString.of(it.toString())) }
-			return newImage
+			val newData = image.userData.copy()
+			newData.putList("efhexs_targets", NbtList().apply { targets.forEach { add(NbtString.of(it.toString())) } })
+			ServerEffectsBacklog.flush(env.world, image)
+			return image.copy(userData = newData)
 		}
 	}
 }

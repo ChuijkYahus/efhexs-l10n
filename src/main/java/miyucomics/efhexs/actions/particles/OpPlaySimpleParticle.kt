@@ -3,16 +3,15 @@ package miyucomics.efhexs.actions.particles
 import at.petrak.hexcasting.api.casting.RenderedSpell
 import at.petrak.hexcasting.api.casting.castables.SpellAction
 import at.petrak.hexcasting.api.casting.eval.CastingEnvironment
-import at.petrak.hexcasting.api.casting.eval.vm.CastingImage
 import at.petrak.hexcasting.api.casting.getVec3
 import at.petrak.hexcasting.api.casting.iota.Iota
 import at.petrak.hexcasting.api.casting.mishaps.MishapInvalidIota
 import at.petrak.hexcasting.api.misc.MediaConstants
-import miyucomics.efhexs.EfhexsMain
-import miyucomics.efhexs.EfhexsMain.Companion.getTargetsFromImage
+import miyucomics.efhexs.misc.ServerEffectsBacklog
+import miyucomics.efhexs.networking.Serializer
+import miyucomics.efhexs.networking.Serializers
+import miyucomics.efhexs.networking.serializers.SimpleParticleInfo
 import miyucomics.hexpose.iotas.getIdentifier
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.particle.DefaultParticleType
 import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
@@ -33,20 +32,10 @@ object OpPlaySimpleParticle : SpellAction {
 	}
 
 	private data class Spell(val particle: Identifier, val pos: Vec3d, val velocity: Vec3d) : RenderedSpell {
-		override fun cast(env: CastingEnvironment) {}
-		override fun cast(env: CastingEnvironment, image: CastingImage): CastingImage {
-			val packet = PacketByteBufs.create()
-			packet.writeIdentifier(particle)
-			packet.writeDouble(pos.x)
-			packet.writeDouble(pos.y)
-			packet.writeDouble(pos.z)
-			packet.writeDouble(velocity.x)
-			packet.writeDouble(velocity.y)
-			packet.writeDouble(velocity.z)
-			getTargetsFromImage(env.world, image, pos.x, pos.y, pos.z).forEach {
-				ServerPlayNetworking.send(it, EfhexsMain.SPAWN_SIMPLE_PARTICLE_CHANNEL, packet)
-			}
-			return image
+		override fun cast(env: CastingEnvironment) {
+			ServerEffectsBacklog.count += 1
+			ServerEffectsBacklog.buffer.writeVarInt(Serializers.CREATE_SIMPLE_PARTICLE.ordinal)
+			(Serializers.CREATE_SIMPLE_PARTICLE.serializer as Serializer<SimpleParticleInfo>).write(ServerEffectsBacklog.buffer, SimpleParticleInfo(particle, pos, velocity))
 		}
 	}
 }

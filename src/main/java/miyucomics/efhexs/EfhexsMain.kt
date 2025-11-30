@@ -21,7 +21,7 @@ import java.util.*
 class EfhexsMain : ModInitializer {
 	override fun onInitialize() {
 		EfhexsActions.init()
-		CastingEnvironment.addCreateEventListener { env: CastingEnvironment, _: NbtCompound -> env.addExtension(EfhexsPusherComponent()) }
+		CastingEnvironment.addCreateEventListener { env: CastingEnvironment, _: NbtCompound -> env.addExtension(EfhexsPusherComponent(env)) }
 
 		ServerPlayNetworking.registerGlobalReceiver(PARTICLE_CHANNEL) { _, player, _, buf, _ ->
 			val new = buf.readIdentifier()
@@ -40,6 +40,8 @@ class EfhexsMain : ModInitializer {
 
 	companion object {
 		fun id(string: String) = Identifier("efhexs", string)
+
+		val EFFECTS_STREAM = id("effects")
 
 		val PARTICLE_CHANNEL = id("particles")
 		val SOUND_CHANNEL = id("sounds")

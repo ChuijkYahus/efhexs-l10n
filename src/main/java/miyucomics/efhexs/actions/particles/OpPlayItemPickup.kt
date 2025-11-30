@@ -3,16 +3,15 @@ package miyucomics.efhexs.actions.particles
 import at.petrak.hexcasting.api.casting.RenderedSpell
 import at.petrak.hexcasting.api.casting.castables.SpellAction
 import at.petrak.hexcasting.api.casting.eval.CastingEnvironment
-import at.petrak.hexcasting.api.casting.eval.vm.CastingImage
 import at.petrak.hexcasting.api.casting.getEntity
 import at.petrak.hexcasting.api.casting.getVec3
 import at.petrak.hexcasting.api.casting.iota.Iota
 import at.petrak.hexcasting.api.misc.MediaConstants
-import miyucomics.efhexs.EfhexsMain
-import miyucomics.efhexs.EfhexsMain.Companion.getTargetsFromImage
+import miyucomics.efhexs.misc.ServerEffectsBacklog
+import miyucomics.efhexs.networking.Serializer
+import miyucomics.efhexs.networking.Serializers
+import miyucomics.efhexs.networking.serializers.ItemParticleInfo
 import miyucomics.hexpose.iotas.getItemStack
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Vec3d
@@ -29,18 +28,10 @@ object OpPlayItemPickup : SpellAction {
 	}
 
 	private data class Spell(val stack: ItemStack, val from: Vec3d, val receiver: Entity) : RenderedSpell {
-		override fun cast(env: CastingEnvironment) {}
-		override fun cast(env: CastingEnvironment, image: CastingImage): CastingImage {
-			getTargetsFromImage(env.world, image, from.x, from.y, from.z).forEach {
-				ServerPlayNetworking.send(it, EfhexsMain.SPAWN_ITEM_PICKUP_CHANNEL, PacketByteBufs.create().apply {
-					writeItemStack(stack)
-					writeDouble(from.x)
-					writeDouble(from.y)
-					writeDouble(from.z)
-					writeInt(receiver.id)
-				})
-			}
-			return image
+		override fun cast(env: CastingEnvironment) {
+			ServerEffectsBacklog.count += 1
+			ServerEffectsBacklog.buffer.writeVarInt(Serializers.CREATE_ITEM_PARTICLE.ordinal)
+			(Serializers.CREATE_ITEM_PARTICLE.serializer as Serializer<ItemParticleInfo>).write(ServerEffectsBacklog.buffer, ItemParticleInfo(stack, from, receiver.id))
 		}
 	}
 }
