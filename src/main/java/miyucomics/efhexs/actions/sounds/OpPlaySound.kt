@@ -32,9 +32,10 @@ object OpPlaySound : SpellAction {
 
 	private data class Spell(val sound: Identifier, val pos: Vec3d, val volume: Float, val pitch: Float) : RenderedSpell {
 		override fun cast(env: CastingEnvironment) {
-			ServerEffectsBacklog.count += 1
-			ServerEffectsBacklog.buffer.writeVarInt(Serializers.PLAY_SOUND.ordinal)
-			(Serializers.PLAY_SOUND.serializer as Serializer<SoundInfo>).write(ServerEffectsBacklog.buffer, SoundInfo(sound, pos, volume, pitch))
+			ServerEffectsBacklog.append(pos) {
+				it.writeVarInt(Serializers.PLAY_SOUND.ordinal)
+				(Serializers.PLAY_SOUND.serializer as Serializer<SoundInfo>).write(it, SoundInfo(sound, pos, volume, pitch))
+			}
 		}
 	}
 }

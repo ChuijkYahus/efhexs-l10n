@@ -25,17 +25,18 @@ object OpPlaySimpleParticle : SpellAction {
 			throw MishapInvalidIota.of(args[0], 2, "particle_id")
 		if (Registries.PARTICLE_TYPE.get(id) !is DefaultParticleType)
 			throw MishapInvalidIota.of(args[0], 2, "simple_particle_id")
-		val pos = args.getVec3(1, argc)
-		env.assertVecInRange(pos)
+		val position = args.getVec3(1, argc)
+		env.assertVecInRange(position)
 		val velocity = args.getVec3(2, argc)
-		return SpellAction.Result(Spell(id, pos, velocity), MediaConstants.DUST_UNIT / 32, listOf())
+		return SpellAction.Result(Spell(id, position, velocity), MediaConstants.DUST_UNIT / 32, listOf())
 	}
 
-	private data class Spell(val particle: Identifier, val pos: Vec3d, val velocity: Vec3d) : RenderedSpell {
+	private data class Spell(val particle: Identifier, val position: Vec3d, val velocity: Vec3d) : RenderedSpell {
 		override fun cast(env: CastingEnvironment) {
-			ServerEffectsBacklog.count += 1
-			ServerEffectsBacklog.buffer.writeVarInt(Serializers.CREATE_SIMPLE_PARTICLE.ordinal)
-			(Serializers.CREATE_SIMPLE_PARTICLE.serializer as Serializer<SimpleParticleInfo>).write(ServerEffectsBacklog.buffer, SimpleParticleInfo(particle, pos, velocity))
+			ServerEffectsBacklog.append(position) {
+				it.writeVarInt(Serializers.CREATE_SIMPLE_PARTICLE.ordinal)
+				(Serializers.CREATE_SIMPLE_PARTICLE.serializer as Serializer<SimpleParticleInfo>).write(it, SimpleParticleInfo(particle, position, velocity))
+			}
 		}
 	}
 }
