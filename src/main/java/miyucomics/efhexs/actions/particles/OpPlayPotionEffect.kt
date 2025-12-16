@@ -24,9 +24,10 @@ object OpPlayPotionEffect : SpellAction {
 
 	private data class Spell(val position: Vec3d, val velocity: Vec3d, val color: Vec3d) : RenderedSpell {
 		override fun cast(env: CastingEnvironment) {
-			ServerEffectsBacklog.count += 1
-			ServerEffectsBacklog.buffer.writeVarInt(Serializers.CREATE_POTION_PARTICLE.ordinal)
-			(Serializers.CREATE_POTION_PARTICLE.serializer as Serializer<PotionParticleInfo>).write(ServerEffectsBacklog.buffer, PotionParticleInfo(position, velocity, color))
+			ServerEffectsBacklog.append(position) {
+				it.writeVarInt(Serializers.CREATE_POTION_PARTICLE.ordinal)
+				(Serializers.CREATE_POTION_PARTICLE.serializer as Serializer<PotionParticleInfo>).write(it, PotionParticleInfo(position, velocity, color))
+			}
 		}
 	}
 }

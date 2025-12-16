@@ -9,6 +9,6 @@ class EfhexsPusherComponent(val env: CastingEnvironment) : CastingEnvironmentCom
 	class EfhexsPusherComponent : CastingEnvironmentComponent.Key<CastingEnvironmentComponent.PostCast>
 
 	override fun onPostCast(image: CastingImage) {
-		ServerEffectsBacklog.flush(env.world, image)
+//		ServerEffectsBacklog.flush(env.world, image)
 	}
 }

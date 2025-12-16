@@ -4,32 +4,42 @@ import at.petrak.hexcasting.api.casting.eval.vm.CastingImage
 import miyucomics.efhexs.EfhexsMain
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.command.argument.EntityArgumentType.player
 import net.minecraft.nbt.NbtElement
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.ChunkPos
+import net.minecraft.util.math.Vec3d
 import java.util.*
 
 object ServerEffectsBacklog {
-	var count: Int = 0
-	var buffer: PacketByteBuf = PacketByteBufs.create()
+	private val chunkBuffers = mutableMapOf<ChunkPos, PacketByteBuf>()
+	private val chunkCounts = mutableMapOf<ChunkPos, Int>()
 
-	// flushes at the end of a hex or when list of targets is changed
-	// concerningly means that every single player everywhere has to see it
-	// will fix in the future, possibly with multiple packet streams per chunk position??
+	fun append(pos: Vec3d, encoder: (PacketByteBuf) -> Unit) {
+		val chunk = ChunkPos(BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt()))
+		val buf = chunkBuffers.getOrPut(chunk) { PacketByteBufs.create() }
+		encoder(buf)
+		chunkCounts[chunk] = chunkCounts.getOrDefault(chunk, 0) + 1
+	}
+
 	fun flush(world: ServerWorld, image: CastingImage) {
-		if (count == 0)
-			return
+		val targets = findTargets(world, image)
 
-		findTargets(world, image).forEach {
-			ServerPlayNetworking.send(it, EfhexsMain.EFFECTS_STREAM, PacketByteBufs.create().apply {
-				writeVarInt(count)
-				writeBytes(buffer)
-			})
+		chunkBuffers.forEach { (chunk, data) ->
+			val packet = PacketByteBufs.create()
+			packet.writeVarInt(chunkCounts[chunk]!!)
+			packet.writeBytes(data)
+
+			world.chunkManager.threadedAnvilChunkStorage.getPlayersWatchingChunk(chunk).filter { it in targets }.forEach {
+				ServerPlayNetworking.send(it, EfhexsMain.EFFECTS_STREAM, packet)
+			}
 		}
 
-		count = 0
-		buffer = PacketByteBufs.create()
+		chunkBuffers.clear()
+		chunkCounts.clear()
 	}
 
 	fun findTargets(world: ServerWorld, image: CastingImage): List<ServerPlayerEntity> {

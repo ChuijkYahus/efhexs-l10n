@@ -20,18 +20,19 @@ object OpPlayItemPickup : SpellAction {
 	override val argc = 3
 	override fun execute(args: List<Iota>, env: CastingEnvironment): SpellAction.Result {
 		val stack = args.getItemStack(0, argc)
-		val from = args.getVec3(1, argc)
-		env.assertVecInRange(from)
+		val position = args.getVec3(1, argc)
+		env.assertVecInRange(position)
 		val receiver = args.getEntity(2, argc)
 		env.assertEntityInRange(receiver)
-		return SpellAction.Result(Spell(stack, from, receiver), MediaConstants.DUST_UNIT / 32, listOf())
+		return SpellAction.Result(Spell(stack, position, receiver), MediaConstants.DUST_UNIT / 32, listOf())
 	}
 
-	private data class Spell(val stack: ItemStack, val from: Vec3d, val receiver: Entity) : RenderedSpell {
+	private data class Spell(val stack: ItemStack, val position: Vec3d, val receiver: Entity) : RenderedSpell {
 		override fun cast(env: CastingEnvironment) {
-			ServerEffectsBacklog.count += 1
-			ServerEffectsBacklog.buffer.writeVarInt(Serializers.CREATE_ITEM_PARTICLE.ordinal)
-			(Serializers.CREATE_ITEM_PARTICLE.serializer as Serializer<ItemParticleInfo>).write(ServerEffectsBacklog.buffer, ItemParticleInfo(stack, from, receiver.id))
+			ServerEffectsBacklog.append(position) {
+				it.writeVarInt(Serializers.CREATE_ITEM_PARTICLE.ordinal)
+				(Serializers.CREATE_ITEM_PARTICLE.serializer as Serializer<ItemParticleInfo>).write(it, ItemParticleInfo(stack, position, receiver.id))
+			}
 		}
 	}
 }
